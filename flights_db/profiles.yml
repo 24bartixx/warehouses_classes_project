@@ -1,0 +1,6 @@
+flights_db:
+  outputs:
+    dev:
+      type: duckdb
+      path: "dev.duckdb"
+  target: dev

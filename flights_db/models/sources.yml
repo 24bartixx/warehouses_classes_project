@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: raw_data
+    description: External CSV files read directly from the raw_data directory by DuckDB.
+    schema: main
+    tables:
+      - name: flights
+        description: Raw flight records from raw_data/flights.csv.
+        meta:
+          external_location: "read_csv_auto('raw_data/flights.csv', header=true, nullstr=['', 'null'])"
+
+      - name: weather
+        description: Raw weather observations from raw_data/weather.csv.
+        meta:
+          external_location: "read_csv_auto('raw_data/weather.csv', header=true, nullstr=['', 'null'])"

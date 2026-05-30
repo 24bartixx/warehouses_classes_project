@@ -1,0 +1,36 @@
+# Python environments and caches
+myenv/
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# dbt artifacts
+**/target/
+**/dbt_packages/
+**/logs/
+**/.user.yml
+
+# Local dbt profiles can contain machine-specific paths or credentials
+**/profiles.yml
+
+# DuckDB local database files
+*.duckdb
+*.duckdb.wal
+
+# Large local source data
+flights_db/raw_data/
+
+# Environment files
+.env
+.env.*
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+*.swp

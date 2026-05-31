@@ -23,7 +23,7 @@ select
         cast(year as varchar(4)), 
         lpad(cast(month as varchar(2)), 2, '0'), 
         lpad(cast(day as varchar(2)), 2, '0')
-    ) as date_id,
+    ) ::varchar(8) as date_id,
     
     year,
 

@@ -15,9 +15,38 @@ select
     coalesce(upper(trim(tail_number)), 'Unknown') ::VARCHAR(7) as tail_number,
     upper(trim(origin_airport)) ::VARCHAR(3) as origin_airport_iata,
     upper(trim(destination_airport)) ::VARCHAR(3) as destination_airport_iata,
-    scheduled_departure ::SMALLINT as scheduled_departure,
-    scheduled_arrival ::SMALLINT as scheduled_arrival,
 
+    {# times #}
+    scheduled_departure ::SMALLINT as scheduled_departure_time,
+    scheduled_arrival ::SMALLINT as scheduled_arrival_time,
+
+    {# dates #}
+    concat(
+        cast(year as varchar(4)), 
+        lpad(cast(month as varchar(2)), 2, '0'), 
+        lpad(cast(day as varchar(2)), 2, '0')
+    ) ::varchar(8) as scheduled_departure_date,
+
+    {# departure timestamp #}
+    (
+        with arrival_date as (
+            select (
+                make_date(year::INT, month::INT, day::INT) + 
+                case 
+                    when scheduled_arrival::INT < scheduled_departure::INT then INTERVAL '1 day' 
+                    else INTERVAL '0 day' 
+                end
+            ) as arr_dt
+        )
+        select concat(
+            extract(year from arr_dt)::VARCHAR(4),
+            lpad(extract(month from arr_dt)::VARCHAR(2), 2, '0'),
+            lpad(extract(day from arr_dt)::VARCHAR(2), 2, '0')
+        )::VARCHAR(8) 
+        from arrival_date
+    ) as scheduled_arrival_date,
+
+    {# arrival timestamp #}
     (make_date(year::INT, month::INT, day::INT) + 
      make_time(
          (scheduled_departure::INT // 100)::BIGINT, 

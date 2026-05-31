@@ -84,3 +84,15 @@ dbt show --profiles-dir . --inline "select * from {{ ref('dim_date') }}" --limit
 ```
 dbt show --profiles-dir . --inline "select * from {{ ref('dim_time') }}" --limit 10
 ```
+
+9. Dim weather lookup
+
+```
+dbt show --profiles-dir . --inline "select * from {{ ref('dim_weather_lookup') }}" --limit 10
+```
+
+11. Fact flights
+
+```
+dbt show --profiles-dir . --inline "select * from {{ ref('dim_weather_lookup') }}" --limit 10
+```

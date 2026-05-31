@@ -8,9 +8,9 @@ with staging_flights as (
 ),
 
 unique_times as (
-    select scheduled_departure as time_id from staging_flights where scheduled_departure is not null
+    select scheduled_departure_time as time_id from staging_flights where scheduled_departure_time is not null
     union 
-    select scheduled_arrival as time_id from staging_flights where scheduled_arrival is not null
+    select scheduled_arrival_time as time_id from staging_flights where scheduled_arrival_time is not null
 )
 
 select

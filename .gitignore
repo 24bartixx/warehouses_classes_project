@@ -26,6 +26,9 @@ __pycache__/
 # Large local source data
 flights_db/raw_data/
 
+# Local CSV datasets; keep dbt seed CSVs versioned
+*.csv
+
 # Environment files
 .env
 .env.*

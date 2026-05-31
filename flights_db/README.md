@@ -54,3 +54,33 @@ dbt show --profiles-dir . --inline "select * from {{ ref('stg_flights') }}" --li
 ```
 dbt show --profiles-dir . --inline "select * from {{ ref('stg_weather') }}" --limit 10
 ```
+
+5. Dim airline
+
+```
+dbt show --profiles-dir . --inline "select * from {{ ref('dim_airline') }}" --limit 10
+```
+
+6. Dim airport
+
+```
+dbt show --profiles-dir . --inline "select * from {{ ref('dim_airport') }}" --limit 10
+```
+
+7. Dim aircraft
+
+```
+dbt show --profiles-dir . --inline "select * from {{ ref('dim_aircraft') }}" --limit 10
+```
+
+8. Dim date
+
+```
+dbt show --profiles-dir . --inline "select * from {{ ref('dim_date') }}" --limit 10
+```
+
+8. Dim time
+
+```
+dbt show --profiles-dir . --inline "select * from {{ ref('dim_time') }}" --limit 10
+```

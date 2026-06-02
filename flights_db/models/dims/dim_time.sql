@@ -14,8 +14,8 @@ unique_times as (
 )
 
 select
-    time_id :: SMALLINT as time_id,
-    (time_id / 100) :: SMALLINT as hour,
+    md5(time_id::text) ::VARCHAR(32) as time_id,
+    (time_id // 100) :: SMALLINT as hour,
     (time_id % 100) :: SMALLINT as minute
 
 from unique_times

@@ -7,79 +7,9 @@ select
     upper(trim(iata_code)) ::VARCHAR(3) as iata_code,
     trim(airport) ::VARCHAR(100) as airport_name,
     trim(city) ::VARCHAR(50) as city,
+    upper(trim(state)) ::VARCHAR(2) as state,
 
-    case upper(trim(state))
-        when 'AK' then 'Alaska'
-        when 'AL' then 'Alabama'
-        when 'AR' then 'Arkansas'
-        when 'AS' then 'American Samoa'
-        when 'AZ' then 'Arizona'
-        when 'CA' then 'California'
-        when 'CO' then 'Colorado'
-        when 'CT' then 'Connecticut'
-        when 'DE' then 'Delaware'
-        when 'FL' then 'Florida'
-        when 'GA' then 'Georgia'
-        when 'GU' then 'Guam'
-        when 'HI' then 'Hawaii'
-        when 'IA' then 'Iowa'
-        when 'ID' then 'Idaho'
-        when 'IL' then 'Illinois'
-        when 'IN' then 'Indiana'
-        when 'KS' then 'Kansas'
-        when 'KY' then 'Kentucky'
-        when 'LA' then 'Louisiana'
-        when 'MA' then 'Massachusetts'
-        when 'MD' then 'Maryland'
-        when 'ME' then 'Maine'
-        when 'MI' then 'Michigan'
-        when 'MN' then 'Minnesota'
-        when 'MO' then 'Missouri'
-        when 'MS' then 'Mississippi'
-        when 'MT' then 'Montana'
-        when 'NC' then 'North Carolina'
-        when 'ND' then 'North Dakota'
-        when 'NE' then 'Nebraska'
-        when 'NH' then 'New Hampshire'
-        when 'NJ' then 'New Jersey'
-        when 'NM' then 'New Mexico'
-        when 'NV' then 'Nevada'
-        when 'NY' then 'New York'
-        when 'OH' then 'Ohio'
-        when 'OK' then 'Oklahoma'
-        when 'OR' then 'Oregon'
-        when 'PA' then 'Pennsylvania'
-        when 'PR' then 'Puerto Rico'
-        when 'RI' then 'Rhode Island'
-        when 'SC' then 'South Carolina'
-        when 'SD' then 'South Dakota'
-        when 'TN' then 'Tennessee'
-        when 'TX' then 'Texas'
-        when 'UT' then 'Utah'
-        when 'VA' then 'Virginia'
-        when 'VI' then 'U.S. Virgin Islands'
-        when 'VT' then 'Vermont'
-        when 'WA' then 'Washington'
-        when 'WI' then 'Wisconsin'
-        when 'WV' then 'West Virginia'
-        when 'WY' then 'Wyoming'
-    end::VARCHAR(25) as state_name,
-
-    case
-        when latitude < 25 then 'South to USA'
-        when latitude < 35 and latitude >= 25 then 'Southern USA'
-        when latitude < 42 and latitude >= 35 then 'Middle USA'
-        when latitude < 49 and latitude >= 42 then 'Northern USA'
-        when latitude >= 49 then 'Canada'
-        else 'Unknown'
-    end ::VARCHAR(12) as latitude_zone,
-
-    case
-        when longitude < -125 then 'Pacific'
-        when longitude < -115 and longitude >= -125 then 'West Coast'
-        when longitude < -85 and longitude >= -115 then 'Central USA'
-        when longitude >= -85 then 'East Coast'
-        else 'Unknown'
-    end ::VARCHAR(12) as longitude_zone
+    latitude ::DECIMAL(8,5) as latitude,
+    longitude ::DECIMAL(8,5) as longitude
 
 from {{ ref('airports') }}

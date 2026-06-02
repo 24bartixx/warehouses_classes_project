@@ -24,7 +24,14 @@ dim_weather_lookup as (
 )
 
 select
-    row_number() over (order by origin_airport_iata) as origin_airport_id,
+    md5(
+        f.origin_airport_iata || '|' ||
+        f.destination_airport_iata || '|' ||
+        f.scheduled_departure_timestamp || '|' ||
+        f.scheduled_arrival_timestamp || '|' ||
+        f.flight_number
+    ) ::VARCHAR(32) as flight_id,
+    
     f.flight_number,
 
     {# airline #}
@@ -40,12 +47,12 @@ select
     sadd.airport_id as destination_airport_id,
 
     {# departure #}
-    f.scheduled_departure_date,
-    f.scheduled_departure_time,
+    (strftime(f.scheduled_departure_date, '%Y%m%d'))::int as scheduled_departure_date_id,
+    f.scheduled_departure_time as scheduled_departure_time_id,
 
     {# arrival #}
-    f.scheduled_arrival_date,
-    f.scheduled_arrival_time,
+    (strftime(f.scheduled_arrival_date, '%Y%m%d'))::int as scheduled_arrival_date_id,
+    f.scheduled_arrival_time as scheduled_arrival_time_id,
 
     {# departure weather lookup #}
     w_orig.weather_id as departure_weather_id,
@@ -70,16 +77,16 @@ select
 
 from staging_flights f
 left join dim_airlines sal
-    on f.airline_name = sal.airline_name
+    on f.airline_iata_code = sal.iata_code
 left join dim_aircrafts sac
     on f.tail_number = sac.tail_number
 left join dim_airports sapo
     on f.origin_airport_iata = sapo.iata_code
 left join dim_airports sadd
     on f.destination_airport_iata = sadd.iata_code
-asof join dim_weather_lookup w_orig
-    on f.destination_airport_iata = w_orig.airport_iata
+asof left join dim_weather_lookup w_orig
+    on f.origin_airport_iata = w_orig.airport_iata
     and f.scheduled_departure_timestamp >= w_orig.valid_at
-asof join dim_weather_lookup w_dest
+asof left join dim_weather_lookup w_dest
     on f.destination_airport_iata = w_dest.airport_iata
     and f.scheduled_arrival_timestamp >= w_dest.valid_at

@@ -13,6 +13,20 @@ weather_elevation as (
         max(airport_elevation) as elevation
     from {{ ref('stg_weather') }}
     group by airport_iata
+),
+
+fuzzy_iata_matching as (
+    select 
+        sa.iata_code,
+        we.elevation as fuzzy_elevation,
+        levenshtein(sa.iata_code, we.airport_iata) as dist
+    from staging_airports sa
+    cross join weather_elevation we
+    where levenshtein(sa.iata_code, we.airport_iata) = 1
+    qualify row_number() over (
+        partition by sa.iata_code 
+        order by dist asc
+    ) = 1
 )
 
 select
@@ -79,7 +93,7 @@ select
     end::VARCHAR(25) as state_name,
 
     sa.city,
-    we.elevation,
+    coalesce(we.elevation, fz.fuzzy_elevation) as elevation,
 
     case
         when sa.latitude < 25 then 'South to USA'
@@ -99,7 +113,12 @@ select
     end ::VARCHAR(14) as longitude_zone
 
 from staging_airports sa
+
 left join weather_elevation we
     on sa.iata_code = we.airport_iata
+
+left join fuzzy_iata_matching fz
+    on sa.iata_code = fz.iata_code
+
 left join {{ ref('stg_bts_airport_map') }} bts
     on sa.iata_code = bts.iata_code

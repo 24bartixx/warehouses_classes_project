@@ -25,6 +25,8 @@ select
     f.*, 
     coalesce(mo_iata.iata_code, mo_id.iata_code) as origin_airport_iata,
     coalesce(md_iata.iata_code, md_id.iata_code) as destination_airport_iata,
+    coalesce(mo_iata.bts_airport_id, mo_id.bts_airport_id) as origin_bts_airport_id,
+    coalesce(md_iata.bts_airport_id, md_id.bts_airport_id) as destination_bts_airport_id
 
 from flights f
 

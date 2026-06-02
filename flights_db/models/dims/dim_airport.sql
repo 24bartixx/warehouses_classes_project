@@ -16,7 +16,7 @@ weather_elevation as (
 )
 
 select
-    md5(sa.iata_code) ::VARCHAR(32) as airport_id,
+    md5(sa.iata_code || '|' || bts.bts_airport_id) ::VARCHAR(32) as airport_id,
     sa.iata_code,
     bts.bts_airport_id,
     sa.airport_name,

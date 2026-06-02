@@ -34,8 +34,8 @@ dim_weather_lookup as (
 
 select
     md5(concat_ws('|', 
-        sapo.airport_id, 
-        sadd.airport_id, 
+        f.origin_airport_iata, 
+        f.destination_airport_iata, 
         f.scheduled_departure_timestamp, 
         f.scheduled_arrival_timestamp, 
         f.flight_number
@@ -45,16 +45,16 @@ select
     f.scheduled_arrival_timestamp,
 
     {# airline #}
-    sal.airline_id,
+    md5(f.airline_iata_code) ::VARCHAR(32) as airline_id,
 
     {# aircraft #}
-    sac.aircraft_id,
+    md5(f.tail_number) ::VARCHAR(32) as aircraft_id,
     
     {# origin airport #}
-    sapo.airport_id as origin_airport_id,
+    md5(f.origin_airport_iata || '|' || f.origin_bts_airport_id) ::VARCHAR(32) as origin_airport_id,
 
     {# destination airport #}
-    sadd.airport_id as destination_airport_id,
+    md5(f.destination_airport_iata || '|' || f.destination_bts_airport_id) ::VARCHAR(32) as destination_airport_id,
 
     {# departure #}
     (strftime(f.scheduled_departure_date, '%Y%m%d'))::int as scheduled_departure_date_id,
@@ -86,14 +86,6 @@ select
     f.cancelled
 
 from staging_flights f
-left join dim_airlines sal
-    on f.airline_iata_code = sal.iata_code
-left join dim_aircrafts sac
-    on f.tail_number = sac.tail_number
-left join dim_airports sapo
-    on f.origin_airport_iata = sapo.iata_code
-left join dim_airports sadd
-    on f.destination_airport_iata = sadd.iata_code
 asof left join dim_weather_lookup w_orig
     on f.origin_airport_iata = w_orig.airport_iata
     and f.scheduled_departure_timestamp >= w_orig.valid_at

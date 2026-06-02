@@ -7,14 +7,10 @@ select
     upper(trim(flight_number :: VARCHAR(5))) ::VARCHAR(5) as flight_number,
 
     {# foreign keys #}
-    year :: SMALLINT as year,
-    month :: SMALLINT as month,
-    day :: SMALLINT as day,
-    day_of_week :: SMALLINT as day_of_week,
     trim(airline) ::VARCHAR(32) as airline_iata_code,
     coalesce(upper(trim(tail_number)), 'Unknown') ::VARCHAR(7) as tail_number,
-    upper(trim(origin_airport)) ::VARCHAR(3) as origin_airport_iata,
-    upper(trim(destination_airport)) ::VARCHAR(3) as destination_airport_iata,
+    upper(trim(origin_airport)) ::VARCHAR(5) as origin_airport_code,
+    upper(trim(destination_airport)) ::VARCHAR(5) as destination_airport_code,
 
     {# times #}
     scheduled_departure ::SMALLINT as scheduled_departure_time,
@@ -68,4 +64,4 @@ select
     diverted ::BOOLEAN as diverted,
     cancelled ::BOOLEAN as cancelled
 
-from {{ source('raw_data', 'flights') }}
+from {{ source('raw_data', 'flights') }} 

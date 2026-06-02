@@ -4,7 +4,7 @@
 ) }}
 
 with staging_flights as (
-    select * from {{ ref('stg_flight') }} 
+    select * from {{ ref('int_flight') }} 
 ),
 
 dim_airlines as (
@@ -24,13 +24,13 @@ dim_weather_lookup as (
 )
 
 select
-    md5(
-        f.origin_airport_iata || '|' ||
-        f.destination_airport_iata || '|' ||
-        f.scheduled_departure_timestamp || '|' ||
-        f.scheduled_arrival_timestamp || '|' ||
+    md5(concat_ws('|', 
+        sapo.airport_id, 
+        sadd.airport_id, 
+        f.scheduled_departure_timestamp, 
+        f.scheduled_arrival_timestamp, 
         f.flight_number
-    ) ::VARCHAR(32) as flight_id,
+    ))::VARCHAR(32) as flight_id,
     
     f.flight_number,
 
@@ -57,8 +57,8 @@ select
     {# departure weather lookup #}
     w_orig.weather_id as departure_weather_id,
 
-    {# destination weather lookup #}
-    w_dest.weather_id as destination_weather_id,
+    {# arrival weather lookup #}
+    w_dest.weather_id as arrival_weather_id,
 
     {# metrics #}
     f.dept_delay_minutes,

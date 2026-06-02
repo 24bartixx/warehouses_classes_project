@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: int_flight
+    columns:
+      - name: origin_airport_iata
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_airport')
+                field: iata_code
+              config:
+                where: "length(origin_airport_iata) = 3"
+      - name: destination_airport_iata
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_airport')
+                field: iata_code
+              config:
+                where: "length(destination_airport_iata) = 3"

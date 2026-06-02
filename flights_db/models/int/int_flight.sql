@@ -1,0 +1,35 @@
+{{ config(
+    materialized='table',
+    schema='marts'
+) }}
+
+with flights as (
+    select * from {{ ref('stg_flight') }}
+),
+
+
+bts_map as (
+    select bts_airport_id, iata_code 
+    from {{ ref('stg_bts_airport_map') }}
+)
+
+select
+    f.*, 
+    coalesce(mo_iata.iata_code, mo_id.iata_code) as origin_airport_iata,
+    coalesce(md_iata.iata_code, md_id.iata_code) as destination_airport_iata
+
+from flights f
+
+-- origins
+left join bts_map mo_iata
+    on f.origin_airport_code = mo_iata.iata_code
+
+left join bts_map mo_id
+    on try_cast(f.origin_airport_code as smallint) = mo_id.bts_airport_id
+
+-- destinations
+left join bts_map md_iata
+    on f.destination_airport_code = md_iata.iata_code
+
+left join bts_map md_id
+    on try_cast(f.destination_airport_code as smallint) = md_id.bts_airport_id

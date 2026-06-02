@@ -16,9 +16,10 @@ weather_elevation as (
 )
 
 select
-    md5(iata_code) ::VARCHAR(32) as airport_id,
-    iata_code,
-    airport_name,
+    md5(sa.iata_code) ::VARCHAR(32) as airport_id,
+    sa.iata_code,
+    bts.bts_airport_id,
+    sa.airport_name,
 
     case upper(trim(state))
         when 'AK' then 'Alaska'
@@ -77,26 +78,28 @@ select
         when 'WY' then 'Wyoming'
     end::VARCHAR(25) as state_name,
 
-    city,
-    elevation,
+    sa.city,
+    we.elevation,
 
     case
-        when latitude < 25 then 'South to USA'
-        when latitude < 35 and latitude >= 25 then 'Southern USA'
-        when latitude < 42 and latitude >= 35 then 'Middle USA'
-        when latitude < 49 and latitude >= 42 then 'Northern USA'
-        when latitude >= 49 then 'Far North'
+        when sa.latitude < 25 then 'South to USA'
+        when sa.latitude < 35 and sa.latitude >= 25 then 'Southern USA'
+        when sa.latitude < 42 and sa.latitude >= 35 then 'Middle USA'
+        when sa.latitude < 49 and sa.latitude >= 42 then 'Northern USA'
+        when sa.latitude >= 49 then 'Far North'
         else 'Unknown'
     end ::VARCHAR(12) as latitude_zone,
 
     case
-        when longitude < -125 then 'Far West Coast'
-        when longitude < -115 and longitude >= -125 then 'West Coast'
-        when longitude < -85 and longitude >= -115 then 'Central USA'
-        when longitude >= -85 then 'East Coast'
+        when sa.longitude < -125 then 'Far West Coast'
+        when sa.longitude < -115 and sa.longitude >= -125 then 'West Coast'
+        when sa.longitude < -85 and sa.longitude >= -115 then 'Central USA'
+        when sa.longitude >= -85 then 'East Coast'
         else 'Unknown'
     end ::VARCHAR(14) as longitude_zone
 
 from staging_airports sa
 left join weather_elevation we
     on sa.iata_code = we.airport_iata
+left join {{ ref('stg_bts_airport_map') }} bts
+    on sa.iata_code = bts.iata_code

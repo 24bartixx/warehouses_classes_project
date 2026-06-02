@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: dim_aiport
+    columns:
+      - name: airport_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: iata_code
+        data_tests:
+          - not_null
+          - unique
+
+      - name: bts_airport_id
+        data_tests:
+          - not_null
+          - unique
+
+      - name: airport_name
+        data_tests:
+          - not_null
+          - unique
+
+      - name: state
+        data_tests:
+          - not_null
+
+      - name: city
+        data_tests:
+          - not_null
+
+      - name: elevation
+        data_tests:
+          - not_null
+
+      - name: latitude_zone
+        data_tests:
+          - not_null
+          - accepted_values:
+              values:
+                [
+                  "South to USA",
+                  "Southern USA",
+                  "Middle USA",
+                  "Northern USA",
+                  "Far North",
+                  "Unknown",
+                ]
+
+      - name: longitude_zone
+        data_tests:
+          - not_null
+          - accepted_values:
+              values:
+                [
+                  "West to USA",
+                  "Western USA",
+                  "Middle USA",
+                  "Eastern USA",
+                  "Far East",
+                  "Unknown",
+                ]

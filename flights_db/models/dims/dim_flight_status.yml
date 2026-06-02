@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: dim_flight_status
+    columns:
+      - name: flight_status_id
+        data_tests:
+          - not_null
+          - unique
+      - name: cancelled
+        data_tests:
+          - not_null
+      - name: diverted
+        data_tests:
+          - not_null
+      - name: cancellation_reason
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  [
+                    "Not Cancelled",
+                    "Unknown",
+                    "Airline/Carrier",
+                    "Weather",
+                    "National Air System",
+                    "Security",
+                  ]
+      - name: arrival_delay_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  [
+                    "Not applicable - cancelled",
+                    "Not applicable - diverted",
+                    "Unknown",
+                    "Delayed 15 or more",
+                    "On Time",
+                  ]

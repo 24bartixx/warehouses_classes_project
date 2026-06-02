@@ -31,6 +31,8 @@ dbt run --profiles-dir .
 
 # Preview
 
+### Staging
+
 1. Staging airports
 
 ```
@@ -38,35 +40,51 @@ dbt show --profiles-dir . --inline "select * from {{ ref('stg_airport') }}" --li
 dbt show --profiles-dir . --inline "select count(*) from {{ ref('stg_airport') }}"
 ```
 
-2. Staging airlines
+2. Staging bts airports
+
+```
+dbt show --profiles-dir . --inline "select * from {{ ref('stg_bts_airport_map') }}" --limit 10
+dbt show --profiles-dir . --inline "select count(*) from {{ ref('stg_bts_airport_map') }}"
+```
+
+3. Staging airlines
 
 ```
 dbt show --profiles-dir . --inline "select * from {{ ref('stg_airline') }}" --limit 10
 dbt show --profiles-dir . --inline "select count(*) from {{ ref('stg_airline') }}"
 ```
 
-3. Staging flights
+4. Staging flights
 
 ```
 dbt show --profiles-dir . --inline "select * from {{ ref('stg_flight') }}" --limit 10
 dbt show --profiles-dir . --inline "select count(*) from {{ ref('stg_flight') }}"
 ```
 
-4. Staging wather
+5. Staging weather
 
 ```
 dbt show --profiles-dir . --inline "select * from {{ ref('stg_weather') }}" --limit 10
 dbt show --profiles-dir . --inline "select count(*) from {{ ref('stg_weather') }}"
 ```
 
-5. Dim airline
+### Intermediate layer
+
+1. Staging flights
+
+```
+dbt show --profiles-dir . --inline "select * from {{ ref('int_flight') }}" --limit 10
+dbt show --profiles-dir . --inline "select count(*) from {{ ref('int_flight') }}"
+```
+
+6. Dim airline
 
 ```
 dbt show --profiles-dir . --inline "select * from {{ ref('dim_airline') }}" --limit 10
 dbt show --profiles-dir . --inline "select count(*) from {{ ref('dim_airline') }}"
 ```
 
-6. Dim airport
+7. Dim airport
 
 ```
 dbt show --profiles-dir . --inline "select * from {{ ref('dim_airport') }}" --limit 10

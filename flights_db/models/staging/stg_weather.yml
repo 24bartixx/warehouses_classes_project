@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_weather
+    columns:
+      - name: airport_iata
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_airport')
+              field: iata_code
+      - name: airport_elevation
+        data_tests:
+          - not_null
+      - name: weather_codes

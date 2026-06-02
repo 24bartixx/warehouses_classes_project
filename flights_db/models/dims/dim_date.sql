@@ -28,7 +28,9 @@ select
     
     extract(isodow from date_day)::smallint as day_of_week,
     
-    strftime(date_day, '%A')::varchar(9) as day_of_week_name
+    strftime(date_day, '%A')::varchar(9) as day_of_week_name,
+
+    case when extract(isodow from date_day) in (6, 7) then true else false end as is_weekend
 
 from flight_data
 order by date_day

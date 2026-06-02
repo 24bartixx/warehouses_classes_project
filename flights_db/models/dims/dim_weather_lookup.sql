@@ -8,15 +8,25 @@ with staging_weather as (
 ),
 
 staging_flights as (
-    select * from {{ ref('stg_flight') }}
+    select * from {{ ref('int_flight') }}
+),
+
+deduped_weather as (
+    select *
+    from staging_weather
+    qualify row_number() over (
+        partition by airport_iata, valid_at
+        order by valid_at
+    ) = 1
 ),
 
 flight_times as (
-    select origin_airport_iata as airport_iata, scheduled_departure_timestamp as flight_time
-    from staging_flights
-    union
-    select destination_airport_iata as airport_iata, scheduled_arrival_timestamp as flight_time
-    from staging_flights
+    select distinct airport_iata, flight_time
+    from (
+        select origin_airport_iata as airport_iata, scheduled_departure_timestamp as flight_time from staging_flights
+        union all
+        select destination_airport_iata as airport_iata, scheduled_arrival_timestamp as flight_time from staging_flights
+    )
 ),
 
 closest_weather as (
@@ -24,9 +34,10 @@ closest_weather as (
         w.airport_iata,
         w.valid_at
     from flight_times ft
-    asof left join staging_weather w
+    asof left join deduped_weather w
         on ft.airport_iata = w.airport_iata
         and ft.flight_time >= w.valid_at
+    where w.valid_at is not null
 )
 
 select
@@ -37,60 +48,61 @@ select
     
     case
         when temperature_celsius is null then 'Unknown'
-        when temperature_celsius < 0 then 'below_zero'
-        when temperature_celsius < 5 then '0_to_5'
-        when temperature_celsius < 10 then '5_to_10'
-        when temperature_celsius < 20 then '10_to_20'
-        else 'above_20'
-    end::VARCHAR(10) as temp_range,
+        when temperature_celsius < -5 then 'Below -5°C'
+        when temperature_celsius < 0 then '-5°C to 0°C'
+        when temperature_celsius < 5 then '0°C to 5°C'
+        when temperature_celsius < 10 then '5°C to 10°C'
+        when temperature_celsius < 15 then '10°C to 15°C'
+        else 'Above 15°C'
+    end::VARCHAR(12) as temp_range,
 
     case
         when wind_speed_mph is null then 'Unknown'
-        when wind_speed_mph < 10 then 'below_10'
-        when wind_speed_mph < 25 then '10_to_25'
-        when wind_speed_mph < 50 then '25_to_50'
-        else 'above_50'
-    end ::VARCHAR(8) as wind_speed_range,
+        when wind_speed_mph < 10 then 'Below 10 mph'
+        when wind_speed_mph < 25 then '10 mph to 25 mph'
+        when wind_speed_mph < 50 then '25 mph to 50 mph'
+        else 'Above 50 mph'
+    end ::VARCHAR(16) as wind_speed_range,
 
     case
         when gust_speed_mph is null then 'Unknown'
-        when gust_speed_mph < 30 then 'below_30'
-        when gust_speed_mph < 80 then '30_to_80'
-        else 'above_80'
-    end ::VARCHAR(8) as gust_speed_range,
+        when gust_speed_mph < 30 then 'Below 30 mph'
+        when gust_speed_mph < 80 then '30 mph to 80 mph'
+        else 'Above 80 mph'
+    end ::VARCHAR(16) as gust_speed_range,
 
     case
         when precipitation_1h is null then 'Unknown'
-        when precipitation_1h < 3 then 'below_3'
-        when precipitation_1h < 8 then '3_to_8'
-        when precipitation_1h < 20 then '8_to_20'
-        else 'above_20'
-    end ::VARCHAR(8) as precipitation_range,
+        when precipitation_1h < 3 then 'Below 3 mm'
+        when precipitation_1h < 8 then '3 mm to 8 mm'
+        when precipitation_1h < 20 then '8 mm to 20 mm'
+        else 'Above 20 mm'
+    end ::VARCHAR(13) as precipitation_range,
 
     case
         when snowdepth is null then 'Unknown'
-        when snowdepth ::NUMERIC < 0.5 then 'below_05'
-        when snowdepth ::NUMERIC < 1 then '05_to_1'
-        else 'above_1'
-    end ::VARCHAR(8) as snow_depth_range,
+        when snowdepth ::NUMERIC < 0.5 then 'Below 0.5 inch'
+        when snowdepth ::NUMERIC < 1 then '0.5 to 1 inch'
+        else 'Above 1 inch'
+    end ::VARCHAR(14) as snow_depth_range,
 
     {# no need to map miles above 200 to 200 #}
     case
         when visibility_miles is null then 'Unknown'
-        when visibility_miles < 0.4 then 'below_04'
-        when visibility_miles < 1 then '04_to_1'
-        when visibility_miles < 3 then '1_to_3'
-        else 'above_3'
-    end ::VARCHAR(8) as visibility_range,
+        when visibility_miles < 0.4 then 'Below 0.4 miles'
+        when visibility_miles < 1 then '0.4 to 1 mile'
+        when visibility_miles < 3 then '1 to 3 miles'
+        else 'Above 3 miles'
+    end ::VARCHAR(15) as visibility_range,
 
     case
         when ice_accretion_1hr is null then 'Unknown'
         when ice_accretion_1hr ::NUMERIC is null then 'Unknown'
-        when ice_accretion_1hr ::NUMERIC < 0.01 then 'below_001'
-        when ice_accretion_1hr ::NUMERIC < 0.1 then '001_to_01'
-        when ice_accretion_1hr ::NUMERIC < 0.25 then '01_to_025'
-        else 'above_025'
-    end ::VARCHAR(9) as ice_accretion_1h_range,
+        when ice_accretion_1hr ::NUMERIC < 0.01 then 'Below 0.01 inch'
+        when ice_accretion_1hr ::NUMERIC < 0.1 then '0.01 inch to 0.1 inch'
+        when ice_accretion_1hr ::NUMERIC < 0.25 then '0.1 inch to 0.25 inch'
+        else 'Above 0.25 inch'
+    end ::VARCHAR(21) as ice_accretion_1h_range,
 
 
     {# thunderstorm / squall (nawałnica) #}
@@ -129,7 +141,7 @@ select
         else false
     end as is_extreme_weather_hazard
 
-from staging_weather w
+from deduped_weather w
 inner join closest_weather cw
     on w.airport_iata = cw.airport_iata
     and w.valid_at = cw.valid_at

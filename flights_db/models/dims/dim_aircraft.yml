@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: dim_aircraft
+    columns:
+      - name: aircraft_id
+        data_tests:
+          - not_null
+          - unique
+      - name: tail_number
+        data_tests:
+          - not_null
+          - unique

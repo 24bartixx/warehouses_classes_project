@@ -1,0 +1,133 @@
+version: 2
+
+models:
+  - name: dim_weather_lookup
+    columns:
+      - name: weather_id
+        data_tests:
+          - not_null
+          - unique
+      - name: airport_iata
+        data_tests:
+          - not_null
+      - name: valid_at
+        data_tests:
+          - not_null
+      - name: temp_range
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  [
+                    "Unknown",
+                    "Below -5°C",
+                    "-5°C to 0°C",
+                    "0°C to 5°C",
+                    "5°C to 10°C",
+                    "10°C to 15°C",
+                    "Above 15°C",
+                  ]
+
+      - name: wind_speed_range
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  [
+                    "Unknown",
+                    "Below 10 mph",
+                    "10 mph to 25 mph",
+                    "25 mph to 50 mph",
+                    "Above 50 mph",
+                  ]
+      - name: gust_speed_range
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  [
+                    "Unknown",
+                    "Below 30 mph",
+                    "30 mph to 80 mph",
+                    "Above 80 mph",
+                  ]
+      - name: precipitation_range
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  [
+                    "Unknown",
+                    "Below 3 mm",
+                    "3 mm to 8 mm",
+                    "8 mm to 20 mm",
+                    "Above 20 mm",
+                  ]
+
+      - name: snow_depth_range
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  ["Unknown", "Below 0.5 inch", "0.5 to 1 inch", "Above 1 inch"]
+
+      - name: visibility_range
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  [
+                    "Unknown",
+                    "Below 0.4 miles",
+                    "0.4 to 1 mile",
+                    "1 to 3 miles",
+                    "Above 3 miles",
+                  ]
+
+      - name: ice_accretion_1h_range
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  [
+                    "Unknown",
+                    "Below 0.01 inch",
+                    "0.01 inch to 0.1 inch",
+                    "0.1 inch to 0.25 inch",
+                    "Above 0.25 inch",
+                  ]
+
+      - name: is_thunderstorm
+        data_tests:
+          - not_null
+
+      - name: is_rain
+        data_tests:
+          - not_null
+
+      - name: is_freezing_precipitation
+        data_tests:
+          - not_null
+
+      - name: is_snow
+        data_tests:
+          - not_null
+
+      - name: is_heavy_snow
+        data_tests:
+          - not_null
+
+      - name: is_fog
+        data_tests:
+          - not_null
+
+      - name: is_extreme_weather_hazard
+        data_tests:
+          - not_null

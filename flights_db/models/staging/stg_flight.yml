@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: stg_flight
+    columns:
+      - name: flight_number
+        data_tests:
+          - not_null
+
+      - name: airline_iata_code
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_airline')
+                field: iata_code
+
+      - name: tail_number
+        data_tests:
+          - not_null
+
+      - name: origin_airport_code
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_airport')
+                field: iata_code
+              config:
+                where: "length(origin_airport_code) = 3"
+
+      - name: destination_airport_code
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_airport')
+                field: iata_code
+              config:
+                where: "length(destination_airport_code) = 3"
+
+      - name: scheduled_departure_date
+        data_tests:
+          - not_null
+
+      - name: scheduled_arrival_date
+        data_tests:
+          - not_null
+
+      - name: scheduled_departure_timestamp
+        data_tests:
+          - not_null
+
+      - name: scheduled_arrival_timestamp
+        data_tests:
+          - not_null

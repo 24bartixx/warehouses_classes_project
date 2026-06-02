@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: stg_bts_airport_map
+    columns:
+      - name: bts_airport_id
+        data_tests:
+          - not_null
+          - unique
+      - name: iata_code
+        data_tests:
+          - not_null
+          - unique

@@ -1,10 +1,19 @@
 {{ config(
-    materialized='table',
+    materialized='incremental',
+    unique_key='flight_id',
+    incremental_strategy='merge',
     schema='marts'
 ) }}
 
 with staging_flights as (
     select * from {{ ref('int_flight') }} 
+
+    {% if is_incremental() %}
+    where scheduled_arrival_timestamp >= (
+        select max(scheduled_arrival_timestamp) - interval '14 day' 
+        from {{ this }}
+    )
+    {% endif %}
 ),
 
 dim_airlines as (
@@ -33,6 +42,7 @@ select
     ))::VARCHAR(32) as flight_id,
     
     f.flight_number,
+    f.scheduled_arrival_timestamp,
 
     {# airline #}
     sal.airline_id,

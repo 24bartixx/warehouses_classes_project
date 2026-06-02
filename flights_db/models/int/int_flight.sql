@@ -1,12 +1,20 @@
 {{ config(
-    materialized='table',
+    materialized='incremental',
+    incremental_strategy='delete+insert',
+    unique_key=['flight_number', 'scheduled_departure_timestamp'],
     schema='marts'
 ) }}
 
 with flights as (
     select * from {{ ref('stg_flight') }}
+    
+    {% if is_incremental() %}
+    where scheduled_arrival_timestamp >= (
+        select max(scheduled_arrival_timestamp) - interval '14 day' 
+        from {{ this }}
+    )
+    {% endif %}
 ),
-
 
 bts_map as (
     select bts_airport_id, iata_code 
@@ -16,7 +24,7 @@ bts_map as (
 select
     f.*, 
     coalesce(mo_iata.iata_code, mo_id.iata_code) as origin_airport_iata,
-    coalesce(md_iata.iata_code, md_id.iata_code) as destination_airport_iata
+    coalesce(md_iata.iata_code, md_id.iata_code) as destination_airport_iata,
 
 from flights f
 

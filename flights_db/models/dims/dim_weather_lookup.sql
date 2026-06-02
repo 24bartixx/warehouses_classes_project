@@ -1,14 +1,30 @@
 {{ config(
-    materialized='table',
+    materialized='incremental',
+    unique_key='weather_id',
+    incremental_strategy='merge',
     schema='marts'
 ) }}
 
 with staging_weather as (
     select * from {{ ref('stg_weather') }} 
+    
+    {% if is_incremental() %}
+    where valid_at >= (
+        select max(valid_at) - interval '14 day' 
+        from {{ this }}
+    )
+    {% endif %}
 ),
 
 staging_flights as (
     select * from {{ ref('int_flight') }}
+    
+    {% if is_incremental() %}
+    where scheduled_arrival_timestamp >= (
+        select max(valid_at) - interval '14 day' 
+        from {{ this }}
+    )
+    {% endif %}
 ),
 
 deduped_weather as (

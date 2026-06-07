@@ -77,58 +77,84 @@ dbt show --profiles-dir . --inline "select * from {{ ref('int_flight') }}" --lim
 dbt show --profiles-dir . --inline "select count(*) from {{ ref('int_flight') }}"
 ```
 
-6. Dim airline
+2. Weather lookup
 
 ```
-dbt show --profiles-dir . --inline "select * from {{ ref('dim_airline') }}" --limit 10
-dbt show --profiles-dir . --inline "select count(*) from {{ ref('dim_airline') }}"
+dbt show --profiles-dir . --inline "select * from {{ ref('int_weather_lookup') }}" --limit 10
+dbt show --profiles-dir . --inline "select count(*) from {{ ref('int_weather_lookup') }}"
+
+# Dimensions
+
+1. Dim airline
+
+```
+
+dbt show --profiles-dir . --inline "select _ from {{ ref('dim_airline') }}" --limit 10
+dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_airline') }}"
+
 ```
 
 7. Dim airport
 
 ```
-dbt show --profiles-dir . --inline "select * from {{ ref('dim_airport') }}" --limit 10
-dbt show --profiles-dir . --inline "select count(*) from {{ ref('dim_airport') }}"
-```
 
-7. Dim aircraft
+dbt show --profiles-dir . --inline "select _ from {{ ref('dim_airport') }}" --limit 10
+dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_airport') }}"
 
 ```
-dbt show --profiles-dir . --inline "select * from {{ ref('dim_aircraft') }}" --limit 10
-dbt show --profiles-dir . --inline "select count(*) from {{ ref('dim_aircraft') }}"
+
+8. Dim aircraft
+
+```
+
+dbt show --profiles-dir . --inline "select _ from {{ ref('dim_aircraft') }}" --limit 10
+dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_aircraft') }}"
+
 ```
 
 8. Dim date
 
 ```
-dbt show --profiles-dir . --inline "select * from {{ ref('dim_date') }}" --limit 10
-dbt show --profiles-dir . --inline "select count(*) from {{ ref('dim_date') }}"
+
+dbt show --profiles-dir . --inline "select _ from {{ ref('dim_date') }}" --limit 10
+dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_date') }}"
+
 ```
 
 8. Dim time
 
 ```
-dbt show --profiles-dir . --inline "select * from {{ ref('dim_time') }}" --limit 10
-dbt show --profiles-dir . --inline "select count(*) from {{ ref('dim_time') }}"
+
+dbt show --profiles-dir . --inline "select _ from {{ ref('dim_time') }}" --limit 10
+dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_time') }}"
+
 ```
 
 9. Dim weather lookup
 
 ```
-dbt show --profiles-dir . --inline "select * from {{ ref('dim_weather_lookup') }}" --limit 10
-dbt show --profiles-dir . --inline "select count(*) from {{ ref('dim_weather_lookup') }}"
+
+dbt show --profiles-dir . --inline "select _ from {{ ref('dim_weather_lookup') }}" --limit 10
+dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_weather_lookup') }}"
+
 ```
 
 10. Dim flight status
 
 ```
-dbt show --profiles-dir . --inline "select * from {{ ref('dim_flight_status') }}" --limit 10
-dbt show --profiles-dir . --inline "select count(*) from {{ ref('dim_flight_status') }}"
+
+dbt show --profiles-dir . --inline "select _ from {{ ref('dim_flight_status') }}" --limit 10
+dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_flight_status') }}"
+
 ```
 
 11. Fact flights
 
 ```
-dbt show --profiles-dir . --inline "select * from {{ ref('fact_flight') }}" --limit 10
-dbt show --profiles-dir . --inline "select count(*) from {{ ref('fact_flight') }}"
+
+dbt show --profiles-dir . --inline "select _ from {{ ref('fact_flight') }}" --limit 10
+dbt show --profiles-dir . --inline "select count(_) from {{ ref('fact_flight') }}"
+
+```
+
 ```

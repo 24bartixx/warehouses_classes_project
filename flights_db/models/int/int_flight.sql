@@ -2,7 +2,7 @@
     materialized='incremental',
     incremental_strategy='delete+insert',
     unique_key=['flight_number', 'scheduled_departure_timestamp'],
-    schema='marts'
+    schema='intermediate'
 ) }}
 
 with flights as (

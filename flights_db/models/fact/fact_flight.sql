@@ -2,7 +2,7 @@
     materialized='incremental',
     unique_key='flight_id',
     incremental_strategy='merge',
-    schema='marts'
+    schema='warehouse'
 ) }}
 
 with staging_flights as (
@@ -30,6 +30,10 @@ dim_airports as (
 
 dim_weather_lookup as (
     select * from {{ ref('dim_weather_lookup') }} 
+),
+
+int_weather_lookup as (
+    select * from {{ ref('int_weather_lookup') }}
 )
 
 select
@@ -86,9 +90,9 @@ select
     f.cancelled
 
 from staging_flights f
-asof left join dim_weather_lookup w_orig
+asof left join int_weather_lookup w_orig
     on f.origin_airport_iata = w_orig.airport_iata
     and f.scheduled_departure_timestamp >= w_orig.valid_at
-asof left join dim_weather_lookup w_dest
+asof left join int_weather_lookup w_dest
     on f.destination_airport_iata = w_dest.airport_iata
     and f.scheduled_arrival_timestamp >= w_dest.valid_at

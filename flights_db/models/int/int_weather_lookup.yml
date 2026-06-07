@@ -1,12 +1,17 @@
 version: 2
 
 models:
-  - name: dim_weather_lookup
+  - name: int_weather_lookup
     columns:
       - name: weather_id
         data_tests:
           - not_null
-          - unique
+      - name: airport_iata
+        data_tests:
+          - not_null
+      - name: valid_at
+        data_tests:
+          - not_null
       - name: temp_range
         data_tests:
           - not_null

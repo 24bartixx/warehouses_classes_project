@@ -1,6 +1,6 @@
 {{ config(
     materialized='table',
-    schema='marts'
+    schema='warehouse'
 ) }}
 
 with staging_airports as (

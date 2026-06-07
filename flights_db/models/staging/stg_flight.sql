@@ -16,15 +16,6 @@ select
     scheduled_departure ::SMALLINT as scheduled_departure_time,
     scheduled_arrival ::SMALLINT as scheduled_arrival_time,
 
-    {# dates #}
-    make_date(year::INT, month::INT, day::INT) as scheduled_departure_date,
-    
-    (make_date(year::INT, month::INT, day::INT) + 
-        case 
-            when scheduled_arrival::INT < scheduled_departure::INT then interval '1 day' 
-            else interval '0 day' 
-        end)::DATE as scheduled_arrival_date,
-
     {# departure timestamp #}
     (make_date(year::INT, month::INT, day::INT) + 
      make_time(

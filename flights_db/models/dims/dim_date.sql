@@ -4,15 +4,15 @@
 ) }}
 
 with flight_data as (
-    select scheduled_departure_date as date_day 
+    select scheduled_departure_timestamp::DATE as date_day 
     from {{ ref('stg_flight') }} 
-    where scheduled_departure_date is not null
+    where scheduled_departure_timestamp is not null
 
     union
 
-    select scheduled_arrival_date as date_day 
+    select scheduled_arrival_timestamp::DATE as date_day 
     from {{ ref('stg_flight') }} 
-    where scheduled_arrival_date is not null
+    where scheduled_arrival_timestamp is not null
 )
 
 select

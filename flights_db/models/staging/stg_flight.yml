@@ -39,14 +39,6 @@ models:
               config:
                 where: "length(destination_airport_code) = 3"
 
-      - name: scheduled_departure_date
-        data_tests:
-          - not_null
-
-      - name: scheduled_arrival_date
-        data_tests:
-          - not_null
-
       - name: scheduled_departure_timestamp
         data_tests:
           - not_null

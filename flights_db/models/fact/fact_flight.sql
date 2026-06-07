@@ -61,11 +61,11 @@ select
     md5(f.destination_airport_iata || '|' || f.destination_bts_airport_id) ::VARCHAR(32) as destination_airport_id,
 
     {# departure #}
-    (strftime(f.scheduled_departure_date, '%Y%m%d'))::int as scheduled_departure_date_id,
+    (strftime(f.scheduled_departure_timestamp::DATE, '%Y%m%d'))::int as scheduled_departure_date_id,
     f.scheduled_departure_time as scheduled_departure_time_id,
 
     {# arrival #}
-    (strftime(f.scheduled_arrival_date, '%Y%m%d'))::int as scheduled_arrival_date_id,
+    (strftime(f.scheduled_arrival_timestamp::DATE, '%Y%m%d'))::int as scheduled_arrival_date_id,
     f.scheduled_arrival_time as scheduled_arrival_time_id,
 
     {# departure weather lookup #}

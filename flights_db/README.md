@@ -93,8 +93,7 @@ dbt show --profiles-dir . --inline "select _ from {{ ref('dim_airline') }}" --li
 dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_airline') }}"
 
 ```
-
-7. Dim airport
+2. Dim airport
 
 ```
 
@@ -103,7 +102,7 @@ dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_airport') }
 
 ```
 
-8. Dim aircraft
+3. Dim aircraft
 
 ```
 
@@ -112,7 +111,7 @@ dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_aircraft') 
 
 ```
 
-8. Dim date
+4. Dim date
 
 ```
 
@@ -121,7 +120,7 @@ dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_date') }}"
 
 ```
 
-8. Dim time
+5. Dim time
 
 ```
 
@@ -130,7 +129,7 @@ dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_time') }}"
 
 ```
 
-9. Dim weather lookup
+6. Dim weather lookup
 
 ```
 
@@ -139,7 +138,7 @@ dbt show --profiles-dir . --inline "select count(_) from {{ ref('dim_weather_loo
 
 ```
 
-10. Dim flight status
+7. Dim flight status
 
 ```
 

@@ -84,23 +84,23 @@ categorized_weather as (
         end ::VARCHAR(21) as ice_accretion_1h_range,
 
         (
-            upper(coalesce(trim(weather_codes), '')) like '%TS%'
-            or upper(coalesce(trim(weather_codes), '')) like '%SQ%'
+            weather_codes like '%TS%'
+            or weather_codes like '%SQ%'
         ) as is_thunderstorm,
-        (upper(coalesce(trim(weather_codes), '')) like '%RA%') as is_rain,
+        (weather_codes like '%RA%') as is_rain,
         (
-            upper(coalesce(trim(weather_codes), '')) like '%FZ%'
-            or upper(coalesce(trim(weather_codes), '')) like '%PL%'
+            weather_codes like '%FZ%'
+            or weather_codes like '%PL%'
         ) as is_freezing_precipitation,
-        (upper(coalesce(trim(weather_codes), '')) like '%SN%') as is_snow,
+        (weather_codes like '%SN%') as is_snow,
         (
-            upper(coalesce(trim(weather_codes), '')) like '%+SN%'
-            or upper(coalesce(trim(weather_codes), '')) like '%BLSN%'
+            weather_codes like '%+SN%'
+            or weather_codes like '%BLSN%'
         ) as is_heavy_snow,
-        (upper(coalesce(trim(weather_codes), '')) like '%FG%') as is_fog,
+        (weather_codes like '%FG%') as is_fog,
         (
-            upper(coalesce(trim(weather_codes), '')) like '%VA%'
-            or upper(coalesce(trim(weather_codes), '')) like '%FC%'
+            weather_codes like '%VA%'
+            or weather_codes like '%FC%'
         ) as is_extreme_weather_hazard
 
     from deduplicated_weather

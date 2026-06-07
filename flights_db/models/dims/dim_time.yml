@@ -8,8 +8,6 @@ models:
     columns:
       - name: time_id
         data_type: SMALLINT
-        constraints:
-          - type: primary_key
         data_tests:
           - not_null
           - unique

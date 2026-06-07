@@ -28,6 +28,14 @@ dim_airports as (
     select * from {{ ref('dim_airport') }} 
 ),
 
+dim_dates as (
+    select * from {{ ref('dim_date') }}
+),
+
+dim_times as (
+    select * from {{ ref('dim_time') }}
+),
+
 dim_weather_lookup as (
     select * from {{ ref('dim_weather_lookup') }} 
 ),
@@ -49,30 +57,30 @@ select
     f.scheduled_arrival_timestamp,
 
     {# airline #}
-    md5(f.airline_iata_code) ::VARCHAR(32) as airline_id,
+    a.airline_id,
 
     {# aircraft #}
-    md5(f.tail_number) ::VARCHAR(32) as aircraft_id,
+    ac.aircraft_id,
     
     {# origin airport #}
-    md5(f.origin_airport_iata || '|' || f.origin_bts_airport_id) ::VARCHAR(32) as origin_airport_id,
+    origin_airport.airport_id as origin_airport_id,
 
     {# destination airport #}
-    md5(f.destination_airport_iata || '|' || f.destination_bts_airport_id) ::VARCHAR(32) as destination_airport_id,
+    destination_airport.airport_id as destination_airport_id,
 
     {# departure #}
-    (strftime(f.scheduled_departure_timestamp::DATE, '%Y%m%d'))::int as scheduled_departure_date_id,
-    f.scheduled_departure_time as scheduled_departure_time_id,
+    departure_date.date_id as scheduled_departure_date_id,
+    departure_time.time_id as scheduled_departure_time_id,
 
     {# arrival #}
-    (strftime(f.scheduled_arrival_timestamp::DATE, '%Y%m%d'))::int as scheduled_arrival_date_id,
-    f.scheduled_arrival_time as scheduled_arrival_time_id,
+    arrival_date.date_id as scheduled_arrival_date_id,
+    arrival_time.time_id as scheduled_arrival_time_id,
 
     {# departure weather lookup #}
-    w_orig.weather_id as departure_weather_id,
+    departure_weather.weather_id as departure_weather_id,
 
     {# arrival weather lookup #}
-    w_dest.weather_id as arrival_weather_id,
+    arrival_weather.weather_id as arrival_weather_id,
 
     {# metrics #}
     f.dept_delay_minutes,
@@ -90,9 +98,31 @@ select
     f.cancelled
 
 from staging_flights f
+left join dim_airlines a
+    on f.airline_iata_code = a.iata_code
+left join dim_aircrafts ac
+    on f.tail_number = ac.tail_number
+left join dim_airports origin_airport
+    on f.origin_airport_iata = origin_airport.iata_code
+    and f.origin_bts_airport_id = origin_airport.bts_airport_id
+left join dim_airports destination_airport
+    on f.destination_airport_iata = destination_airport.iata_code
+    and f.destination_bts_airport_id = destination_airport.bts_airport_id
+left join dim_dates departure_date
+    on (strftime(f.scheduled_departure_timestamp::DATE, '%Y%m%d'))::int = departure_date.date_id
+left join dim_dates arrival_date
+    on (strftime(f.scheduled_arrival_timestamp::DATE, '%Y%m%d'))::int = arrival_date.date_id
+left join dim_times departure_time
+    on f.scheduled_departure_time = departure_time.time_id
+left join dim_times arrival_time
+    on f.scheduled_arrival_time = arrival_time.time_id
 asof left join int_weather_lookup w_orig
     on f.origin_airport_iata = w_orig.airport_iata
     and f.scheduled_departure_timestamp >= w_orig.valid_at
 asof left join int_weather_lookup w_dest
     on f.destination_airport_iata = w_dest.airport_iata
     and f.scheduled_arrival_timestamp >= w_dest.valid_at
+left join dim_weather_lookup departure_weather
+    on w_orig.weather_id = departure_weather.weather_id
+left join dim_weather_lookup arrival_weather
+    on w_dest.weather_id = arrival_weather.weather_id

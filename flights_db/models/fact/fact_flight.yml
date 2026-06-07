@@ -9,8 +9,6 @@ models:
     columns:
       - name: flight_id
         data_type: VARCHAR(32)
-        constraints:
-          - type: primary_key
         data_tests:
           - not_null
           - unique
@@ -25,9 +23,6 @@ models:
 
       - name: airline_id
         data_type: VARCHAR(32)
-        constraints:
-          - type: foreign_key
-            expression: main_warehouse.dim_airline(airline_id)
         data_tests:
           - not_null
           - relationships:
@@ -37,9 +32,6 @@ models:
 
       - name: aircraft_id
         data_type: VARCHAR(32)
-        constraints:
-          - type: foreign_key
-            expression: main_warehouse.dim_aircraft(aircraft_id)
         data_tests:
           - not_null
           - relationships:
@@ -49,9 +41,6 @@ models:
 
       - name: origin_airport_id
         data_type: VARCHAR(32)
-        constraints:
-          - type: foreign_key
-            expression: main_warehouse.dim_airport(airport_id)
         data_tests:
           - not_null
           - relationships:
@@ -61,9 +50,6 @@ models:
 
       - name: destination_airport_id
         data_type: VARCHAR(32)
-        constraints:
-          - type: foreign_key
-            expression: main_warehouse.dim_airport(airport_id)
         data_tests:
           - not_null
           - relationships:
@@ -73,9 +59,6 @@ models:
 
       - name: scheduled_departure_date_id
         data_type: INT
-        constraints:
-          - type: foreign_key
-            expression: main_warehouse.dim_date(date_id)
         data_tests:
           - not_null
           - relationships:
@@ -85,9 +68,6 @@ models:
 
       - name: scheduled_departure_time_id
         data_type: SMALLINT
-        constraints:
-          - type: foreign_key
-            expression: main_warehouse.dim_time(time_id)
         data_tests:
           - not_null
           - relationships:
@@ -97,9 +77,6 @@ models:
 
       - name: scheduled_arrival_date_id
         data_type: INT
-        constraints:
-          - type: foreign_key
-            expression: main_warehouse.dim_date(date_id)
         data_tests:
           - not_null
           - relationships:
@@ -109,9 +86,6 @@ models:
 
       - name: scheduled_arrival_time_id
         data_type: SMALLINT
-        constraints:
-          - type: foreign_key
-            expression: main_warehouse.dim_time(time_id)
         data_tests:
           - not_null
           - relationships:
@@ -121,9 +95,6 @@ models:
 
       - name: departure_weather_id
         data_type: VARCHAR(32)
-        constraints:
-          - type: foreign_key
-            expression: main_warehouse.dim_weather_lookup(weather_id)
         data_tests:
           - relationships:
               arguments:
@@ -132,9 +103,6 @@ models:
 
       - name: arrival_weather_id
         data_type: VARCHAR(32)
-        constraints:
-          - type: foreign_key
-            expression: main_warehouse.dim_weather_lookup(weather_id)
         data_tests:
           - relationships:
               arguments:

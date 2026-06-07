@@ -27,6 +27,29 @@ fuzzy_iata_matching as (
         partition by sa.iata_code 
         order by dist asc
     ) = 1
+),
+
+city_corrections as (
+    select
+        upper(trim(state))::VARCHAR(2) as state,
+        trim(raw_city)::VARCHAR(50) as raw_city,
+        trim(correct_city)::VARCHAR(50) as correct_city
+    from {{ ref('city_corrections') }}
+),
+
+fuzzy_city_matching as (
+    select
+        sa.iata_code,
+        cc.correct_city,
+        levenshtein(lower(sa.city), lower(cc.raw_city)) as dist
+    from staging_airports sa
+    inner join city_corrections cc
+        on sa.state = cc.state
+        and levenshtein(lower(sa.city), lower(cc.raw_city)) <= 1
+    qualify row_number() over (
+        partition by sa.iata_code
+        order by dist asc
+    ) = 1
 )
 
 select
@@ -92,7 +115,7 @@ select
         when 'WY' then 'Wyoming'
     end::VARCHAR(25) as state_name,
 
-    sa.city,
+    coalesce(fc.correct_city, sa.city)::VARCHAR(50) as city,
     coalesce(we.elevation, fz.fuzzy_elevation) as elevation,
 
     case
@@ -119,6 +142,9 @@ left join weather_elevation we
 
 left join fuzzy_iata_matching fz
     on sa.iata_code = fz.iata_code
+
+left join fuzzy_city_matching fc
+    on sa.iata_code = fc.iata_code
 
 left join {{ ref('stg_bts_airport_map') }} bts
     on sa.iata_code = bts.iata_code

@@ -16,6 +16,6 @@ select
     vsby ::NUMERIC as visibility_miles,
     ice_accretion_1hr ::NUMERIC as ice_accretion_1hr,
 
-    upper(trim(wxcodes)) as weather_codes
+    coalesce(upper(trim(wxcodes)), '') as weather_codes
     
 from {{ source('raw_data', 'weather') }}

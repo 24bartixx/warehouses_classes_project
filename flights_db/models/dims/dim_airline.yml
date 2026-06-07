@@ -8,8 +8,6 @@ models:
     columns:
       - name: airline_id
         data_type: VARCHAR(32)
-        constraints:
-          - type: primary_key
         data_tests:
           - not_null
           - unique

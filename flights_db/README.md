@@ -165,8 +165,9 @@ SELECT
 (SELECT COUNT(_) FROM main_warehouse.dim_airport) AS total_airports,
 (SELECT COUNT(_) FROM main_warehouse.dim_date) AS total_dates,
 (SELECT COUNT(_) FROM main_warehouse.dim_time) AS total_times,
+(SELECT COUNT(_) FROM main_warehouse.dim_flight_status) AS total_flight_statuses,
 (SELECT COUNT(_) FROM main_warehouse.dim_weather_lookup) AS total_weathers,
-(SELECT COUNT(\*) FROM main_warehouse.fact_flight) AS total_flights;
+(SELECT COUNT(_) FROM main_warehouse.fact_flight) AS total_flights;
 
 ```
 

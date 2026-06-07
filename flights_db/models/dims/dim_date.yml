@@ -8,8 +8,6 @@ models:
     columns:
       - name: date_id
         data_type: INT
-        constraints:
-          - type: primary_key
         data_tests:
           - not_null
           - unique

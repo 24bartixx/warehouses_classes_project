@@ -2,12 +2,19 @@ version: 2
 
 models:
   - name: dim_aircraft
+    config:
+      contract:
+        enforced: true
     columns:
       - name: aircraft_id
+        data_type: VARCHAR(32)
+        constraints:
+          - type: primary_key
         data_tests:
           - not_null
           - unique
       - name: tail_number
+        data_type: VARCHAR(7)
         data_tests:
           - not_null
           - unique

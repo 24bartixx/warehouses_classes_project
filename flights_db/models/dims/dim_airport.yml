@@ -2,40 +2,53 @@ version: 2
 
 models:
   - name: dim_airport
+    config:
+      contract:
+        enforced: true
     columns:
       - name: airport_id
+        data_type: VARCHAR(32)
+        constraints:
+          - type: primary_key
         data_tests:
           - not_null
           - unique
 
       - name: iata_code
+        data_type: VARCHAR(3)
         data_tests:
           - not_null
           - unique
 
       - name: bts_airport_id
+        data_type: SMALLINT
         data_tests:
           - not_null
           - unique
 
       - name: airport_name
+        data_type: VARCHAR(100)
         data_tests:
           - not_null
           - unique
 
       - name: state_name
+        data_type: VARCHAR(25)
         data_tests:
           - not_null
 
       - name: city
+        data_type: VARCHAR(50)
         data_tests:
           - not_null
 
       - name: elevation
+        data_type: SMALLINT
         data_tests:
           - not_null
 
       - name: latitude_zone
+        data_type: VARCHAR(12)
         data_tests:
           - not_null
           - accepted_values:
@@ -50,6 +63,7 @@ models:
                 ]
 
       - name: longitude_zone
+        data_type: VARCHAR(14)
         data_tests:
           - not_null
           - accepted_values:

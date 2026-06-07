@@ -2,12 +2,19 @@ version: 2
 
 models:
   - name: dim_time
+    config:
+      contract:
+        enforced: true
     columns:
       - name: time_id
+        data_type: SMALLINT
+        constraints:
+          - type: primary_key
         data_tests:
           - not_null
           - unique
       - name: hour
+        data_type: SMALLINT
         data_tests:
           - not_null
           - accepted_values:
@@ -41,6 +48,7 @@ models:
                     24,
                   ]
       - name: minute
+        data_type: SMALLINT
         data_tests:
           - not_null
           - accepted_values:

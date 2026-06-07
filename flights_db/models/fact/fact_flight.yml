@@ -2,33 +2,56 @@ version: 2
 
 models:
   - name: fact_flight
+    config:
+      contract:
+        enforced: true
+      on_schema_change: fail
     columns:
       - name: flight_id
+        data_type: VARCHAR(32)
+        constraints:
+          - type: primary_key
         data_tests:
           - not_null
           - unique
 
       - name: flight_number
+        data_type: VARCHAR(5)
         data_tests:
           - not_null
 
+      - name: scheduled_arrival_timestamp
+        data_type: TIMESTAMP
+
       - name: airline_id
+        data_type: VARCHAR(32)
+        constraints:
+          - type: foreign_key
+            expression: main_warehouse.dim_airline(airline_id)
         data_tests:
           - not_null
           - relationships:
               arguments:
-                to: ref('dim_airlines')
+                to: ref('dim_airline')
                 field: airline_id
 
       - name: aircraft_id
+        data_type: VARCHAR(32)
+        constraints:
+          - type: foreign_key
+            expression: main_warehouse.dim_aircraft(aircraft_id)
         data_tests:
           - not_null
           - relationships:
               arguments:
-                to: ref('dim_aircrafts')
+                to: ref('dim_aircraft')
                 field: aircraft_id
 
       - name: origin_airport_id
+        data_type: VARCHAR(32)
+        constraints:
+          - type: foreign_key
+            expression: main_warehouse.dim_airport(airport_id)
         data_tests:
           - not_null
           - relationships:
@@ -37,6 +60,10 @@ models:
                 field: airport_id
 
       - name: destination_airport_id
+        data_type: VARCHAR(32)
+        constraints:
+          - type: foreign_key
+            expression: main_warehouse.dim_airport(airport_id)
         data_tests:
           - not_null
           - relationships:
@@ -45,6 +72,10 @@ models:
                 field: airport_id
 
       - name: scheduled_departure_date_id
+        data_type: INT
+        constraints:
+          - type: foreign_key
+            expression: main_warehouse.dim_date(date_id)
         data_tests:
           - not_null
           - relationships:
@@ -53,6 +84,10 @@ models:
                 field: date_id
 
       - name: scheduled_departure_time_id
+        data_type: SMALLINT
+        constraints:
+          - type: foreign_key
+            expression: main_warehouse.dim_time(time_id)
         data_tests:
           - not_null
           - relationships:
@@ -61,6 +96,10 @@ models:
                 field: time_id
 
       - name: scheduled_arrival_date_id
+        data_type: INT
+        constraints:
+          - type: foreign_key
+            expression: main_warehouse.dim_date(date_id)
         data_tests:
           - not_null
           - relationships:
@@ -69,6 +108,10 @@ models:
                 field: date_id
 
       - name: scheduled_arrival_time_id
+        data_type: SMALLINT
+        constraints:
+          - type: foreign_key
+            expression: main_warehouse.dim_time(time_id)
         data_tests:
           - not_null
           - relationships:
@@ -77,6 +120,10 @@ models:
                 field: time_id
 
       - name: departure_weather_id
+        data_type: VARCHAR(32)
+        constraints:
+          - type: foreign_key
+            expression: main_warehouse.dim_weather_lookup(weather_id)
         data_tests:
           - relationships:
               arguments:
@@ -84,20 +131,57 @@ models:
                 field: weather_id
 
       - name: arrival_weather_id
+        data_type: VARCHAR(32)
+        constraints:
+          - type: foreign_key
+            expression: main_warehouse.dim_weather_lookup(weather_id)
         data_tests:
           - relationships:
               arguments:
                 to: ref('dim_weather_lookup')
                 field: weather_id
 
-      - name: distance
-        data_tests:
-          - not_null
+      - name: dept_delay_minutes
+        data_type: SMALLINT
 
-      - name: cancelled
+      - name: arr_delay_minutes
+        data_type: SMALLINT
+
+      - name: air_system_delay_minutes
+        data_type: SMALLINT
+
+      - name: security_delay_minutes
+        data_type: SMALLINT
+
+      - name: airline_delay_minutes
+        data_type: SMALLINT
+
+      - name: late_aircraft_delay_minutes
+        data_type: SMALLINT
+
+      - name: weather_delay_minutes
+        data_type: SMALLINT
+
+      - name: scheduled_time_minutes
+        data_type: SMALLINT
+
+      - name: elapsed_time_minutes
+        data_type: SMALLINT
+
+      - name: air_time_minutes
+        data_type: SMALLINT
+
+      - name: distance
+        data_type: SMALLINT
         data_tests:
           - not_null
 
       - name: diverted
+        data_type: BOOLEAN
+        data_tests:
+          - not_null
+
+      - name: cancelled
+        data_type: BOOLEAN
         data_tests:
           - not_null

@@ -2,16 +2,24 @@ version: 2
 
 models:
   - name: dim_airline
+    config:
+      contract:
+        enforced: true
     columns:
       - name: airline_id
+        data_type: VARCHAR(32)
+        constraints:
+          - type: primary_key
         data_tests:
           - not_null
           - unique
       - name: iata_code
+        data_type: VARCHAR(2)
         data_tests:
           - not_null
           - unique
       - name: airline_name
+        data_type: VARCHAR(32)
         data_tests:
           - not_null
           - unique

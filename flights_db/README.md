@@ -156,4 +156,18 @@ dbt show --profiles-dir . --inline "select count(_) from {{ ref('fact_flight') }
 
 ```
 
+# Counts
+```
+
+SELECT
+(SELECT COUNT(_) FROM main_warehouse.dim_airline) AS total_airlines,
+(SELECT COUNT(_) FROM main_warehouse.dim_aircraft) AS total_aircrafts,
+(SELECT COUNT(_) FROM main_warehouse.dim_airport) AS total_airports,
+(SELECT COUNT(_) FROM main_warehouse.dim_date) AS total_dates,
+(SELECT COUNT(_) FROM main_warehouse.dim_time) AS total_times,
+(SELECT COUNT(_) FROM main_warehouse.dim_weather_lookup) AS total_weathers,
+(SELECT COUNT(\*) FROM main_warehouse.fact_flight) AS total_flights;
+
+```
+
 ```

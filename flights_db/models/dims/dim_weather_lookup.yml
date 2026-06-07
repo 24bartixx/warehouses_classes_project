@@ -2,12 +2,21 @@ version: 2
 
 models:
   - name: dim_weather_lookup
+    config:
+      contract:
+        enforced: true
+      on_schema_change: fail
     columns:
       - name: weather_id
+        data_type: VARCHAR(32)
+        constraints:
+          - type: primary_key
         data_tests:
           - not_null
           - unique
+
       - name: temp_range
+        data_type: VARCHAR(12)
         data_tests:
           - not_null
           - accepted_values:
@@ -24,6 +33,7 @@ models:
                   ]
 
       - name: wind_speed_range
+        data_type: VARCHAR(16)
         data_tests:
           - not_null
           - accepted_values:
@@ -36,7 +46,9 @@ models:
                     "25 mph to 50 mph",
                     "Above 50 mph",
                   ]
+
       - name: gust_speed_range
+        data_type: VARCHAR(16)
         data_tests:
           - not_null
           - accepted_values:
@@ -48,7 +60,9 @@ models:
                     "30 mph to 80 mph",
                     "Above 80 mph",
                   ]
+
       - name: precipitation_range
+        data_type: VARCHAR(13)
         data_tests:
           - not_null
           - accepted_values:
@@ -63,6 +77,7 @@ models:
                   ]
 
       - name: snow_depth_range
+        data_type: VARCHAR(14)
         data_tests:
           - not_null
           - accepted_values:
@@ -71,6 +86,7 @@ models:
                   ["Unknown", "Below 0.5 inch", "0.5 to 1 inch", "Above 1 inch"]
 
       - name: visibility_range
+        data_type: VARCHAR(15)
         data_tests:
           - not_null
           - accepted_values:
@@ -85,6 +101,7 @@ models:
                   ]
 
       - name: ice_accretion_1h_range
+        data_type: VARCHAR(21)
         data_tests:
           - not_null
           - accepted_values:
@@ -99,29 +116,36 @@ models:
                   ]
 
       - name: is_thunderstorm
+        data_type: BOOLEAN
         data_tests:
           - not_null
 
       - name: is_rain
+        data_type: BOOLEAN
         data_tests:
           - not_null
 
       - name: is_freezing_precipitation
+        data_type: BOOLEAN
         data_tests:
           - not_null
 
       - name: is_snow
+        data_type: BOOLEAN
         data_tests:
           - not_null
 
       - name: is_heavy_snow
+        data_type: BOOLEAN
         data_tests:
           - not_null
 
       - name: is_fog
+        data_type: BOOLEAN
         data_tests:
           - not_null
 
       - name: is_extreme_weather_hazard
+        data_type: BOOLEAN
         data_tests:
           - not_null

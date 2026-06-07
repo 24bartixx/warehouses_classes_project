@@ -2,25 +2,55 @@ version: 2
 
 models:
   - name: dim_date
+    config:
+      contract:
+        enforced: true
     columns:
       - name: date_id
+        data_type: INT
+        constraints:
+          - type: primary_key
         data_tests:
           - not_null
           - unique
       - name: year
+        data_type: SMALLINT
         data_tests:
           - not_null
       - name: quarter
+        data_type: SMALLINT
         data_tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3, 4]
       - name: month
+        data_type: SMALLINT
         data_tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+      - name: month_name
+        data_type: VARCHAR(9)
+        data_tests:
+          - not_null
+          - accepted_values:
+              values:
+                [
+                  "January",
+                  "February",
+                  "March",
+                  "April",
+                  "May",
+                  "June",
+                  "July",
+                  "August",
+                  "September",
+                  "October",
+                  "November",
+                  "December",
+                ]
       - name: day
+        data_type: SMALLINT
         data_tests:
           - not_null
           - accepted_values:
@@ -59,36 +89,13 @@ models:
                   31,
                 ]
       - name: day_of_week
+        data_type: SMALLINT
         data_tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3, 4, 5, 6, 7]
-      - name: is_weekend
-        data_tests:
-          - not_null
-          - accepted_values:
-              values: [true, false]
-
-      - name: month_name
-        data_tests:
-          - not_null
-          - accepted_values:
-              values:
-                [
-                  "January",
-                  "February",
-                  "March",
-                  "April",
-                  "May",
-                  "June",
-                  "July",
-                  "August",
-                  "September",
-                  "October",
-                  "November",
-                  "December",
-                ]
       - name: day_of_week_name
+        data_type: VARCHAR(9)
         data_tests:
           - not_null
           - accepted_values:
@@ -102,3 +109,9 @@ models:
                   "Saturday",
                   "Sunday",
                 ]
+      - name: is_weekend
+        data_type: BOOLEAN
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]

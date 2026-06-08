@@ -18,6 +18,15 @@ models:
         data_tests:
           - not_null
 
+      - name: flight_status_id
+        data_type: BIGINT
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_flight_status')
+                field: flight_status_id
+
       - name: airline_id
         data_type: BIGINT
         data_tests:

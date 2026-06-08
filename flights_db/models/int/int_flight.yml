@@ -21,3 +21,8 @@ models:
                 field: iata_code
               config:
                 where: "length(destination_airport_iata) = 3"
+
+      - name: flight_status_hash
+        data_type: VARCHAR(32)
+        data_tests:
+          - not_null

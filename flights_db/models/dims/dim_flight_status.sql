@@ -42,14 +42,16 @@ distinct_statuses as (
 )
 
 select
-    -- md5(
-    --     coalesce(cancelled::text, 'null') || '|' ||
-    --     coalesce(diverted::text, 'null') || '|' ||
-    --     coalesce(cancellation_reason, 'null') || '|' ||
-    --     coalesce(arrival_delay_status, 'null')
-    -- ) ::VARCHAR(32) as flight_status_id,
-
     row_number() over (order by cancelled, diverted, cancellation_reason, arrival_delay_status) as flight_status_id,
+
+    md5(
+        concat_ws('|', 
+            cancelled::text, 
+            diverted::text, 
+            cancellation_reason, 
+            arrival_delay_status
+        )
+    )::VARCHAR(32) as flight_status_hash,
 
     cancelled ::BOOLEAN as cancelled,
     diverted ::BOOLEAN as diverted,

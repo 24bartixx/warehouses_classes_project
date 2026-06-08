@@ -16,6 +16,10 @@ with staging_flights as (
     {% endif %}
 ),
 
+dim_flight_statuses as (
+    select * from {{ ref('dim_flight_status') }} 
+),
+
 dim_airlines as (
     select * from {{ ref('dim_airline') }} 
 ),
@@ -57,12 +61,15 @@ select
     
     f.flight_number,
 
+    {# flight status #}
+    fs.flight_status_id,
+
     {# airline #}
     a.airline_id,
 
     {# aircraft #}
     ac.aircraft_id,
-    
+
     {# origin airport #}
     origin_airport.airport_id as origin_airport_id,
 
@@ -99,6 +106,8 @@ select
     f.cancelled
 
 from staging_flights f
+left join dim_flight_statuses fs
+    on f.flight_status_hash = fs.flight_status_hash
 left join dim_airlines a
     on f.airline_iata_code = a.iata_code
 left join dim_aircrafts ac

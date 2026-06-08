@@ -1,6 +1,9 @@
 flights_db:
   outputs:
     dev:
-      type: duckdb
-      path: "dev.duckdb"
+      type: sqlserver
+      driver: "ODBC Driver 18 for SQL Server"
+      schema: "dbo"
+      trusted_connection: true
+      threads: 4
   target: dev

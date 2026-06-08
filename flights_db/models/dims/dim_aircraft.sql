@@ -14,6 +14,7 @@ distinct_aircrafts as (
 )
 
 select
-    md5(tail_number) ::VARCHAR(32) as aircraft_id,
+    -- md5(tail_number) ::VARCHAR(32) as aircraft_id,
+    row_number() over (order by tail_number) as aircraft_id,
     tail_number
 from distinct_aircrafts

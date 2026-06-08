@@ -114,6 +114,6 @@ select
             is_thunderstorm::VARCHAR, is_rain::VARCHAR, is_freezing_precipitation::VARCHAR, 
             is_snow::VARCHAR, is_heavy_snow::VARCHAR, is_fog::VARCHAR, is_extreme_weather_hazard::VARCHAR
         )
-    )::VARCHAR(32) as weather_id,
+    )::VARCHAR(32) as weather_hash,
     *
 from categorized_weather

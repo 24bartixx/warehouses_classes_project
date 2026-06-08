@@ -8,6 +8,12 @@ models:
       on_schema_change: fail
     columns:
       - name: weather_id
+        data_type: BIGINT
+        data_tests:
+          - not_null
+          - unique
+
+      - name: weather_hash
         data_type: VARCHAR(32)
         data_tests:
           - not_null

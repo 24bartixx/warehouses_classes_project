@@ -45,16 +45,17 @@ int_weather_lookup as (
 )
 
 select
-    md5(concat_ws('|', 
-        f.origin_airport_iata, 
-        f.destination_airport_iata, 
-        f.scheduled_departure_timestamp, 
-        f.scheduled_arrival_timestamp, 
-        f.flight_number
-    ))::VARCHAR(32) as flight_id,
+    -- md5(concat_ws('|', 
+    --     f.origin_airport_iata, 
+    --     f.destination_airport_iata, 
+    --     f.scheduled_departure_timestamp, 
+    --     f.scheduled_arrival_timestamp, 
+    --     f.flight_number
+    -- ))::VARCHAR(32) as flight_id,
+
+    row_number() over(order by f.flight_number) as flight_id,
     
     f.flight_number,
-    f.scheduled_arrival_timestamp,
 
     {# airline #}
     a.airline_id,
@@ -123,6 +124,6 @@ asof left join int_weather_lookup w_dest
     on f.destination_airport_iata = w_dest.airport_iata
     and f.scheduled_arrival_timestamp >= w_dest.valid_at
 left join dim_weather_lookup departure_weather
-    on w_orig.weather_id = departure_weather.weather_id
+    on w_orig.weather_hash = departure_weather.weather_hash
 left join dim_weather_lookup arrival_weather
-    on w_dest.weather_id = arrival_weather.weather_id
+    on w_dest.weather_hash = arrival_weather.weather_hash

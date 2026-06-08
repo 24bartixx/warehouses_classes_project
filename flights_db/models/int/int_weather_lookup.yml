@@ -3,7 +3,7 @@ version: 2
 models:
   - name: int_weather_lookup
     columns:
-      - name: weather_id
+      - name: weather_hash
         data_tests:
           - not_null
       - name: airport_iata

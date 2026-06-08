@@ -8,7 +8,8 @@ with staging_airlines as (
 )
 
 select
-    md5(iata_code) ::VARCHAR(32) as airline_id,
+    -- md5(iata_code) ::VARCHAR(32) as airline_id,
+    row_number() over (order by iata_code) as airline_id,
     iata_code,
     airline_name
 from staging_airlines

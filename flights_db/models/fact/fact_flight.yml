@@ -8,7 +8,7 @@ models:
       on_schema_change: fail
     columns:
       - name: flight_id
-        data_type: VARCHAR(32)
+        data_type: BIGINT
         data_tests:
           - not_null
           - unique
@@ -18,11 +18,8 @@ models:
         data_tests:
           - not_null
 
-      - name: scheduled_arrival_timestamp
-        data_type: TIMESTAMP
-
       - name: airline_id
-        data_type: VARCHAR(32)
+        data_type: BIGINT
         data_tests:
           - not_null
           - relationships:
@@ -31,7 +28,7 @@ models:
                 field: airline_id
 
       - name: aircraft_id
-        data_type: VARCHAR(32)
+        data_type: BIGINT
         data_tests:
           - not_null
           - relationships:
@@ -40,7 +37,7 @@ models:
                 field: aircraft_id
 
       - name: origin_airport_id
-        data_type: VARCHAR(32)
+        data_type: BIGINT
         data_tests:
           - not_null
           - relationships:
@@ -49,7 +46,7 @@ models:
                 field: airport_id
 
       - name: destination_airport_id
-        data_type: VARCHAR(32)
+        data_type: BIGINT
         data_tests:
           - not_null
           - relationships:
@@ -58,7 +55,7 @@ models:
                 field: airport_id
 
       - name: scheduled_departure_date_id
-        data_type: INT
+        data_type: INTEGER
         data_tests:
           - not_null
           - relationships:
@@ -76,7 +73,7 @@ models:
                 field: time_id
 
       - name: scheduled_arrival_date_id
-        data_type: INT
+        data_type: INTEGER
         data_tests:
           - not_null
           - relationships:
@@ -94,7 +91,7 @@ models:
                 field: time_id
 
       - name: departure_weather_id
-        data_type: VARCHAR(32)
+        data_type: BIGINT
         data_tests:
           - relationships:
               arguments:
@@ -102,7 +99,7 @@ models:
                 field: weather_id
 
       - name: arrival_weather_id
-        data_type: VARCHAR(32)
+        data_type: BIGINT
         data_tests:
           - relationships:
               arguments:

@@ -16,6 +16,13 @@ unique_times as (
 select
     time_id as time_id,
     (time_id // 100) :: SMALLINT as hour,
-    (time_id % 100) :: SMALLINT as minute
+    (time_id % 100) :: SMALLINT as minute,
+    case 
+        when time_id is null then 'Unknown'
+        when time_id >= 600 and time_id < 900 then 'Morning (06-09)'
+        when time_id >= 900 and time_id < 1700 then 'Midday (09-17)'
+        when time_id < 2200 then 'Evening (17-22)'
+        else 'Night (22-06)'
+    end ::VARCHAR(15) as time_of_day
 
 from unique_times

@@ -40,10 +40,19 @@ models:
         data_tests:
           - not_null
 
-      - name: elevation
-        data_type: SMALLINT
+      - name: elevation_range
+        data_type: VARCHAR(25)
         data_tests:
           - not_null
+          - accepted_values:
+              values:
+                [
+                  "Unknown",
+                  "Lowland (0-1000 ft)",
+                  "Moderate (1000-3000 ft)",
+                  "High (3000-5000 ft)",
+                  "Very High (5000+ ft)",
+                ]
 
       - name: latitude_zone
         data_type: VARCHAR(12)

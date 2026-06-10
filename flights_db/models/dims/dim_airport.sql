@@ -118,7 +118,14 @@ select
     end::VARCHAR(25) as state_name,
 
     coalesce(fc.correct_city, sa.city)::VARCHAR(50) as city,
-    coalesce(we.elevation, fz.fuzzy_elevation) as elevation,
+
+    case
+        when coalesce(we.elevation, fz.fuzzy_elevation) is null then 'Unknown'
+        when coalesce(we.elevation, fz.fuzzy_elevation) <= 1000 then 'Lowland (0-1000 ft)'
+        when coalesce(we.elevation, fz.fuzzy_elevation) <= 3000 then 'Moderate (1000-3000 ft)'
+        when coalesce(we.elevation, fz.fuzzy_elevation) <= 5000 then 'High (3000-5000 ft)'
+        else 'Very High (5000+ ft)'
+    end::VARCHAR(25) as elevation_range,
 
     case
         when sa.latitude < 25 then 'South to USA'

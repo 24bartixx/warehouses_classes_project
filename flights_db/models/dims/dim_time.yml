@@ -114,3 +114,18 @@ models:
                     58,
                     59,
                   ]
+
+      - name: time_of_day
+        data_type: VARCHAR(15)
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  [
+                    "Unknown",
+                    "Morning (06-09)",
+                    "Midday (09-17)",
+                    "Evening (17-22)",
+                    "Night (22-06)",
+                  ]

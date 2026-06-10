@@ -30,6 +30,13 @@ select
     
     strftime(date_day, '%A')::varchar(9) as day_of_week_name,
 
+    case 
+        when strftime(date_day, '%m%d') >= '0321' and strftime(date_day, '%m%d') < '0622' then 'Spring'
+        when strftime(date_day, '%m%d') >= '0622' and strftime(date_day, '%m%d') < '0923' then 'Summer'
+        when strftime(date_day, '%m%d') >= '0923' and strftime(date_day, '%m%d') < '1221' then 'Autumn'
+        else 'Winter'
+    end::varchar(6) as season,
+
     case when extract(isodow from date_day) in (6, 7) then true else false end as is_weekend
 
 from flight_data

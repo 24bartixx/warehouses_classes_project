@@ -107,6 +107,14 @@ models:
                   "Saturday",
                   "Sunday",
                 ]
+
+      - name: season
+        data_type: VARCHAR(6)
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ["Spring", "Summer", "Autumn", "Winter"]
+
       - name: is_weekend
         data_type: BOOLEAN
         data_tests:
